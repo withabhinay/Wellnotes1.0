@@ -28,7 +28,7 @@ const LoginPage = ({ setAuthToken, authToken, handleLogout }) => {
         console.log("Authentication check: ", authResponse);
         setAuthToken(authResponse.auth_token);
         console.log("auth token received", authToken);
-        navigate("/home");
+        navigate("/Landingpage");
       }
       if (error) {
         console.error("Authentication error:", error);

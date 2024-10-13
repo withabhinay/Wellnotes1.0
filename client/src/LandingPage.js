@@ -8,7 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from './components/ui/accordion'
-import { LoginModal } from './login-modal'
+import  LoginPage  from './LoginPage'
 
 export default function LandingPage() {
   return (
@@ -20,14 +20,14 @@ export default function LandingPage() {
           <a href="#contact">Contact Us</a>
           <a href="#faq">FAQs</a>
         </nav>
-        <LoginModal />
+        <LoginPage />
       </header>
 
       <main>
         <section className="container mx-auto text-center py-20">
           <h1 className="text-4xl font-bold mb-4">Get Paid to Build Your Productive Wellbeing with Wellnotes</h1>
           <p className="mb-8">Write, journal, and compete with friends while building social accountability + earning rewards</p>
-          <img src="/path-to-app-screenshot.png" alt="Wellnotes App Interface" width={800} height={600} className="mx-auto" />
+          <img src="./assets/feature1.svg" alt="Wellnotes App Interface" width={800} height={600} className="mx-auto" />
         </section>
 
         <section className="container mx-auto py-20">
