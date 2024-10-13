@@ -74,6 +74,7 @@ User.post("/auth", async (req, res) => {
                                 Date: new Date(),
                             },
                             Journals: [],
+                            Tokens_Earned: 0,
                             createdAt: new Date(),
                         });
                         await New_User.save().then(()=>{
@@ -127,18 +128,34 @@ User.post("/new_journal", async (req, res) => {
                         Date: newDate,
                     };
                     let Email = req.body.Email;
-                    await Users.updateOne({Email: Email}, {$push: {Journals: Journal}}).then(()=>{
-                        return res.status(201).json({
-                            Status: "Success",
-                            Message: "Journal added successfully",
-                            Journal: Journal,
+                    let GetUser = await Users.findOne({Email: Email});
+                    if (GetUser) {
+                        
+                        await Users.updateOne({Email: GetUser.Email}, {
+                            $push: {
+                                Journals: Journal
+                            },
+                            $set: {
+                                Tokens_Earned: GetUser.Tokens_Earned+1
+                            }
+                        }).then(()=>{
+                            return res.status(201).json({
+                                Status: "Success",
+                                Message: "Journal added successfully",
+                                Journal: Journal,
+                            });
+                        }).catch(e=>{
+                            return res.status(500).json({
+                                Status: "Error",
+                                Message: "Internal server error",
+                            });
                         });
-                    }).catch(e=>{
-                        return res.status(500).json({
+                    }else{
+                        return res.status(404).json({
                             Status: "Error",
-                            Message: "Internal server error",
+                            Message: "User not found",
                         });
-                    });
+                    };
                 }else{
                     return res.status(200).json({
                         Status: "Error",

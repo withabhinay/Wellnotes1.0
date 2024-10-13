@@ -41,6 +41,10 @@ const userSchema = new Schema({
             default: Date.now
         }
     },
+    Tokens_Earned:{
+        type: Number,
+        required: true
+    },
     Journals:[
         {
             ID:{
