@@ -24,7 +24,6 @@ User.get("/", (req, res) => {
     });
 });
 
-
 // Authenticate user
 User.post("/auth", async (req, res) => {
     async function main() {
@@ -49,9 +48,6 @@ User.post("/auth", async (req, res) => {
                             Message: "Internal server error",
                         });
                     });
-                    
-                
-                    
                 }else{  
                     // If user does not exist
                     let ID = "";
@@ -106,8 +102,6 @@ User.post("/auth", async (req, res) => {
         });
     });
 });
-
-
 // Create a new Journal
 User.post("/new_journal", async (req, res) => {
     async function main() {
@@ -126,7 +120,6 @@ User.post("/new_journal", async (req, res) => {
                     let Email = req.body.Email;
                     let GetUser = await Users.findOne({Email: Email});
                     if (GetUser) {
-                        
                         await Users.updateOne({Email: GetUser.Email}, {
                             $push: {
                                 Journals: Journal
@@ -209,9 +202,9 @@ User.get("/all_journals", async (req, res) => {
             Status: "Error",
             Message: "Internal server error",
         });
-    })
+    });
 });
-
+// Get a Journal by ID
 User.get("/journals/:id", async (req, res) => {
     async function main(){
         const Email = req.body.Email;
@@ -253,6 +246,7 @@ User.get("/journals/:id", async (req, res) => {
         });
     });
 });
+// Search for a Journal
 User.get("/journals/search", async (req, res) => {
     async function main(){
         function findMatchingObjects(sentence, objectsArray) {
@@ -273,7 +267,6 @@ User.get("/journals/search", async (req, res) => {
                 });
             };
             if(data){
-                
                 let Journals = data.Journals;
                 for (let i = 0; i < Journals.length; i++) {
                     const element = Journals[i];
@@ -285,7 +278,6 @@ User.get("/journals/search", async (req, res) => {
                         });
                     };
                 };
-                
                 const Found = findMatchingObjects(Title, Journals);
                 if (Found) {
                     return res.status(200).json({
@@ -313,6 +305,7 @@ User.get("/journals/search", async (req, res) => {
         });
     });
 });
+// Get profile
 User.get("/profile", async (req, res) => {
     async function main(){
         const Email = req.body.Email;
@@ -327,15 +320,14 @@ User.get("/profile", async (req, res) => {
                 Status: "Success",
                 Journals: data,
             });
-        
         });
-    }
+    };
     main().catch(e=>{
         res.status(500).json({
             Status: "Error",
             Message: "Internal server error",
         });
-    })
+    });
 });
 
 // If route is not found
