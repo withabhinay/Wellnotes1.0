@@ -23,6 +23,24 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    Name:{
+        type: String,
+        required: true
+    },
+    Email:{
+        type: String,
+        required: true,
+        lowercase: true,
+    },
+    Authentication:{
+        Token:{
+            type: String,
+        },
+        Date:{
+            type: Date,
+            default: Date.now
+        }
+    },
     Journals:[
         {
             ID:{
@@ -43,10 +61,6 @@ const userSchema = new Schema({
             }
         }
     ],
-    Email:{
-        type: String,
-        required: true
-    },
     createdAt: {
         type: Date,
         default: Date.now
