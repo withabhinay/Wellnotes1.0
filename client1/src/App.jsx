@@ -31,7 +31,7 @@ function App() {
                   element={authToken ? <Dashboard authToken={authToken} handleLogout={handleLogout} /> : <Navigate to="/" />}
                 />
                  <Route
-                  path="/new-journal"
+                  path="/new_journal"
                   element={authToken ? <NewJournal authToken={authToken} handleLogout={handleLogout} /> : <Navigate to="/" />}
                 /> 
                 {/* <Route path="/widget" element={authToken ? <WidgetPage authToken={authToken} handleLogout={handleLogout} /> : <Navigate to="/login" />} /> */}

@@ -4,8 +4,11 @@ import axios from 'axios';
 import { Search, PlusCircle } from 'lucide-react';
 import { useOkto } from "okto-sdk-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { useNavigate } from 'react-router-dom';
 
-export default function Dashboard() {
+export default function Dashboard({ setAuthToken, authToken, handleLogout }) {
+  const [dbtoken, setDbtoken] = useState(null)
+  const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState(null);
   const [error, setError] = useState(null);
   const { getUserDetails, logOut } = useOkto();
@@ -23,25 +26,40 @@ export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showPopup, setShowPopup] = useState(false);
 
-  useEffect(() => {
+  useEffect(()=> {
+    localStorage.setItem("dbtoken", dbtoken);
+    fetchJournals();
+  },[dbtoken]);
+  
+  useEffect( () => {
     fetchUserDetails();
+    
   }, []);
 
+  const fetchJournals = async () => {
+    console.log("inside fetch journal",dbtoken);
+    const response = await axios.post("http://localhost:3000/api/all_journals",
+       {
+        Token: dbtoken
+      }
+    )
+    console.log("reposnee for journals",response)
+    setJournals(response.data.Journals)
+  }
   const fetchUserDetails = async () => {
     try {
       const details = await getUserDetails();
       console.log("User details fetched from Okto:", details);
       setUserDetails(details);
 
-      const authResponse =  axios.post('http://localhost:3000/api/auth', {
+      const authResponse =  await axios.post('http://localhost:3000/api/auth', {
         Email: details.email,
-        },{
-         headers: {
-            'Content-Type': 'application/json'
-         }});
-
+        });
+        setDbtoken(authResponse.data.Token)
+        
+        console.log("here res",authResponse)
       if (authResponse.status === 200) {
-        console.log('User authenticated successfully:', authResponse.data);
+        console.log('User authenticated successfully:', authResponse.data.Token);
       } else {
         console.error('Authentication failed');
       }
@@ -51,11 +69,11 @@ export default function Dashboard() {
   };
 
   const filteredJournals = journals.filter(journal =>
-    journal.title.toLowerCase().includes(searchTerm.toLowerCase())
+    journal.Title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleNewJournal = () => {
-    window.location.href = '/new-journal';
+    navigate('/new_journal');
   };
 
   const handleJoinGroup = () => {
@@ -136,8 +154,8 @@ export default function Dashboard() {
             {filteredJournals.length > 0 ? (
               filteredJournals.map(journal => (
                 <div key={journal.id} className="bg-gray-700 p-4 rounded-lg">
-                  <h3 className="text-xl font-semibold mb-2">{journal.title}</h3>
-                  <p className="text-gray-400">{journal.excerpt}</p>
+                  <h3 className="text-xl font-semibold mb-2">{journal.Title}</h3>
+                  <p className="text-gray-400">{journal.Description}</p>
                 </div>
               ))
             ) : (
