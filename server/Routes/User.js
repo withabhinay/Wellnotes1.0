@@ -194,7 +194,7 @@ User.post("/new_journal", async (req, res) => {
                         Journals: New_Journal,
                         Tokens_Earned: CheckedUser.Tokens_Earned+1
                     }).then(()=>{
-                        return res.status(201).json({
+                        return res.status(200).json({
                             Status: "Success",
                             Message: "Journal added successfully",
                             Journal: Journal,
@@ -245,7 +245,7 @@ User.post("/new_journal", async (req, res) => {
 });
 
 // Get all Journal 
-User.get("/all_journals", async (req, res) => {
+User.post("/all_journals", async (req, res) => {
     async function main(CheckedUser){
                 
         return res.status(200).json({
@@ -270,7 +270,7 @@ User.get("/all_journals", async (req, res) => {
     }
 });
 // Get a Journal by ID
-User.get("/journals/:id", async (req, res) => {
+User.post("/journals/:id", async (req, res) => {
     async function main(CheckedUser){
         const id = req.params.id;
         let Journals = CheckedUser.Journals;
@@ -305,7 +305,7 @@ User.get("/journals/:id", async (req, res) => {
     }
 });
 // Search for a Journal
-User.get("/journal/search", async (req, res) => {
+User.post("/journal/search", async (req, res) => {
     function findMatchingObjects(sentence, objectsArray) {
         function isPercentageSame(s1, s2, percentage) {
             const lengthToCompare = Math.floor(s2.length * (percentage / 100));
@@ -357,7 +357,7 @@ User.get("/journal/search", async (req, res) => {
     }
 });
 // Get profile
-User.get("/profile", async (req, res) => {
+User.post("/profile", async (req, res) => {
     async function main(CheckedUser){
         return res.status(200).json({
             Status: "Success",
@@ -381,7 +381,7 @@ User.get("/profile", async (req, res) => {
     }
 });
 
-User.get("/logout", async (req, res) => {
+User.post("/logout", async (req, res) => {
     async function main(CheckedUser){
 
         await Users.updateOne({Email: CheckedUser.Email}, {
