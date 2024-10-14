@@ -43,6 +43,7 @@ const userSchema = new Schema({
     },
     Journals:[
         {
+            _id : false,
             ID:{
                 type: String,
                 required: true

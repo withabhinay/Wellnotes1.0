@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 const User = Routes.Router();
 export default User;
 import { Users } from "../Models.js";
+import e from 'express';
 
 function isValidEmail(mail) {
     const a = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -112,8 +113,9 @@ User.post("/auth", async (req, res) => {
                             Message: "Internal server error",
                         });
                     });
-                }else{  
+                }else{ 
                     // If user does not exist
+                    const Token = Create_Authentication_Token();
                     let ID = "";
                     while (true){
                         ID = Profile_ID();
@@ -122,6 +124,10 @@ User.post("/auth", async (req, res) => {
                             break;
                         };
                     };
+                    const Auth = Create_JWT_Token({
+                        Token: Token,
+                        ID: ID
+                    }); 
                     const New_User = new Users({
                         _id: ID,
                         Email: Email,
@@ -135,11 +141,6 @@ User.post("/auth", async (req, res) => {
                     });
                     await New_User.save().then(()=>{
                         
-                        const Token = Create_Authentication_Token();
-                        const Auth = Create_JWT_Token({
-                            Token: Token,
-                            ID: ID,
-                        });
                         return res.status(200).json({
                             Status: "Success",
                             Token: Auth,
@@ -165,7 +166,8 @@ User.post("/auth", async (req, res) => {
             });
         };
     };
-    main().catch(()=> {
+    main().catch((a)=> {
+        console.log(a);
         return res.status(500).json({
             Status: "Error",
             Message: "Internal server error",
@@ -179,21 +181,17 @@ User.post("/new_journal", async (req, res) => {
         if (Title && Description) {
             if (Title.length > 3 && Title.length < 100) {
                 if (Description.length > 3 && Description.length < 1000) {
-                    const newDate = new Date();
-                    const ID = Date.now();
                     const Journal = {
-                        ID: ID,
                         Title: Title,
                         Description: Description,
-                        Date: newDate,
+                        ID: Date.now(),
+                        Date: new Date(),
                     };
+                    let New_Journal = CheckedUser.Journals;
+                    New_Journal.push(Journal);
                     await Users.updateOne({Email: CheckedUser.Email}, {
-                        $push: {
-                            Journals: Journal
-                        },
-                        $set: {
-                            Tokens_Earned: GetUser.Tokens_Earned+1
-                        }
+                        Journals: New_Journal,
+                        Tokens_Earned: CheckedUser.Tokens_Earned+1
                     }).then(()=>{
                         return res.status(201).json({
                             Status: "Success",
@@ -201,6 +199,8 @@ User.post("/new_journal", async (req, res) => {
                             Journal: Journal,
                         });
                     }).catch(e=>{
+                        
+                        // console.log(e);
                         return res.status(500).json({
                             Status: "Error",
                             Message: "Internal server error",
@@ -228,7 +228,7 @@ User.post("/new_journal", async (req, res) => {
     };
     const a = await ValidToken(req.body.Token);
     if(a){
-        main(a).catch(()=>{
+        main(a).catch(e=>{
             return res.status(500).json({
                 Status: "Error",
                 Message: "Internal server error",
@@ -304,22 +304,21 @@ User.get("/journals/:id", async (req, res) => {
     }
 });
 // Search for a Journal
-User.get("/journals/search", async (req, res) => {
-    async function main(CheckedUser){
-        function findMatchingObjects(sentence, objectsArray) {
-            function isPercentageSame(s1, s2, percentage) {
-                const lengthToCompare = Math.floor(s2.length * (percentage / 100));
-                return s1.substring(0, lengthToCompare) === s2.substring(0, lengthToCompare);
-            };
-            const matchedObjects = objectsArray.filter(obj => isPercentageSame(sentence, obj.Title, 40));
-            return matchedObjects.length > 0 ? matchedObjects : null;
+User.get("/journal/search", async (req, res) => {
+    function findMatchingObjects(sentence, objectsArray) {
+        function isPercentageSame(s1, s2, percentage) {
+            const lengthToCompare = Math.floor(s2.length * (percentage / 100));
+            return s1.substring(0, lengthToCompare) === s2.substring(0, lengthToCompare);
         };
+        const matchedObjects = objectsArray.filter(obj => isPercentageSame(sentence, obj.Title, 40));
+        return matchedObjects.length > 0 ? matchedObjects : null;
+    };
+    async function main(CheckedUser){
         const Title = req.body.Title;
-        
         let Journals = CheckedUser.Journals;
         for (let i = 0; i < Journals.length; i++) {
             const element = Journals[i];
-            if (Journals.Title.toLowerCase().trim() == Title.toLowerCase()) {
+            if (element.Title.toLowerCase().trim() == Title.toLowerCase()) {
                 return res.status(200).json({
                     Status: "Success",
                     Matched: "100%",
@@ -337,13 +336,12 @@ User.get("/journals/search", async (req, res) => {
         };
         return res.status(404).json({
             Status: "Error",
-            Message: "Journal not found",
+            Message: "Journals not found",
         });
-
     };
     const a = await ValidToken(req.body.Token);
     if(a){
-        main(a).catch(()=>{
+        main(a).catch(e=>{
             return res.status(500).json({
                 Status: "Error",
                 Message: "Internal server error",
