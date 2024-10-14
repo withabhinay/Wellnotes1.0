@@ -87,7 +87,7 @@ User.get("/", (req, res) => {
 User.post("/auth", async (req, res) => {
     async function main() {
         let {Email} = req.body;
-        console.log(req);
+ 
         if (Email) {
             Email = Email.toLowerCase();
             if(isValidEmail(Email)){
@@ -178,7 +178,11 @@ User.post("/auth", async (req, res) => {
 // Create a new Journal
 User.post("/new_journal", async (req, res) => {
     async function main(CheckedUser) {
-        const {Title, Description} = req.body;
+        const {Title, Description, Token} = req.body;
+        console.log(req.body);
+        console.log(Title);
+        console.log(Description);
+        console.log(Token);
         if (Title && Description) {
             if (Title.length > 3 && Title.length < 100) {
                 if (Description.length > 3 && Description.length < 1000) {

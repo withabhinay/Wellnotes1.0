@@ -1,17 +1,20 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 
-export default function NewJournal() {
-  const [title, setTitle] = useState('')
-  const [body, setBody] = useState('')
+export default function NewJournal({ setAuthToken, authToken, handleLogout }) {
+  const [Title, setTitle] = useState('')
+  const [Description, setBody] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
-
+    const Token = localStorage.getItem("dbtoken");
+    console.log("inside posting",Token);
     try {
-      const response = await axios.post('http://api/journal', { title, body })
+      const response = await axios.post('http://localhost:3000/api/new_journal', { 
+        Title, Description, Token}
+        )
       alert("Journal Published: Your journal entry has been successfully published.")
       setTitle('')
       setBody('')
@@ -64,7 +67,7 @@ export default function NewJournal() {
               <input
                 type="text"
                 placeholder="Title"
-                value={title}
+                value={Title}
                 onChange={(e) => setTitle(e.target.value)}
                 className="bg-gray-700 border-gray-600 text-white w-full p-2"
                 required
@@ -73,7 +76,7 @@ export default function NewJournal() {
             <div>
               <textarea
                 placeholder="Body"
-                value={body}
+                value={Description}
                 onChange={(e) => setBody(e.target.value)}
                 className="bg-gray-700 border-gray-600 text-white w-full p-2 h-40"
                 required
