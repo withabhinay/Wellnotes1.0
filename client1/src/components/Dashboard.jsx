@@ -33,9 +33,12 @@ export default function Dashboard() {
       console.log("User details fetched from Okto:", details);
       setUserDetails(details);
 
-      const authResponse = await axios.post('http://localhost:3000/api/auth', {
-        email: details.email,
-      });
+      const authResponse =  axios.post('http://localhost:3000/api/auth', {
+        Email: details.email,
+        },{
+         headers: {
+            'Content-Type': 'application/json'
+         }});
 
       if (authResponse.status === 200) {
         console.log('User authenticated successfully:', authResponse.data);
@@ -79,7 +82,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div className="bg-gray-800 p-4 rounded-lg">
           <h2 className="text-lg font-bold mb-2">User ID</h2>
-          <p className="text-1xl font-semibold">{userDetails.user_id}</p>
+          <p className="text-1xl font-semibold">{userDetails ? userDetails.user_id: 'Loading...'}</p>
         </div>
         <div className="bg-gray-800 p-4 rounded-lg">
           <h2 className="text-lg font-semibold mb-2">Total Journals</h2>

@@ -13,7 +13,7 @@ function App() {
  const [authToken, setAuthToken] = useState(null);
  const handleLogout = () => {
     console.log("setting auth token to null")
-    setAuthToken(null); // Clear the authToken
+    //setAuthToken(null); // Clear the authToken
   };
  return (
    <Router>

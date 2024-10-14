@@ -87,6 +87,7 @@ User.get("/", (req, res) => {
 User.post("/auth", async (req, res) => {
     async function main() {
         let {Email} = req.body;
+        console.log(req);
         if (Email) {
             Email = Email.toLowerCase();
             if(isValidEmail(Email)){

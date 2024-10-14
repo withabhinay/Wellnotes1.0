@@ -22,12 +22,13 @@ const LoginPage = ({ setAuthToken, authToken, handleLogout }) => {
     console.log("Google login response:", credentialResponse);
     const idToken = credentialResponse.credential;
     console.log("google idtoken: ", idToken);
-    authenticate(idToken, async (authResponse, error) => {
+    await authenticate(idToken, async (authResponse, error) => {
+      console.log(authResponse)
       if (authResponse) {
         console.log("Authentication check: ", authResponse);
         setAuthToken(authResponse.auth_token);
         console.log("auth token received", authToken);
-        navigate("/dashboard");
+         navigate("/dashboard");
       }
       if (error) {
         console.error("Authentication error:", error);
