@@ -3,6 +3,7 @@ import { useOkto } from "okto-sdk-react";
 import { useNavigate } from "react-router-dom";
 
 const ReadData = ({ authToken, handleLogout }) => {
+  
   console.log("readdata component rendered: ", authToken);
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState(null);

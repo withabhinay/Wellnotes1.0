@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import LoginPage from './components/LoginPage';
 import LandingPage from './components/LandingPage';
 import Dashboard from './components/Dashboard';
-// import HomePage from './components/HomePage';
+//import NewJournal from './components/PostingJournal';
 // import WidgetPage from './components/WidgetPage';
 
 const OKTO_CLIENT_API_KEY = "b1ad05f3-19c8-4464-8d87-944a20632d4d";
@@ -33,7 +33,10 @@ function App() {
                   path="/dashboard"
                   element={authToken ? <Dashboard authToken={authToken} handleLogout={handleLogout} /> : <Navigate to="/" />}
                 />
-
+                {/* <Route
+                  path="/new-journal"
+                  element={authToken ? <NewJournal authToken={authToken} handleLogout={handleLogout} /> : <Navigate to="/" />}
+                /> */}
                 {/* <Route path="/widget" element={authToken ? <WidgetPage authToken={authToken} handleLogout={handleLogout} /> : <Navigate to="/login" />} /> */}
               </Routes>
             </OktoProvider>

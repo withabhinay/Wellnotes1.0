@@ -22,8 +22,7 @@ const LoginPage = ({ setAuthToken, authToken, handleLogout }) => {
     console.log("Google login response:", credentialResponse);
     const idToken = credentialResponse.credential;
     console.log("google idtoken: ", idToken);
-    await authenticate(idToken, async (authResponse, error) => {
-      console.log(authResponse)
+    authenticate(idToken, async (authResponse, error) => {
       if (authResponse) {
         console.log("Authentication check: ", authResponse);
         setAuthToken(authResponse.auth_token);
