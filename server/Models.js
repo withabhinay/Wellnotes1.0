@@ -34,7 +34,7 @@ const userSchema = new Schema({
         },
         Date:{
             type: Date,
-            default: Date.now
+            default: Date()
         }
     },
     Tokens_Earned:{
@@ -57,13 +57,13 @@ const userSchema = new Schema({
             },
             Date:{
                 type: Date,
-                default: Date.now
+                default: Date()
             }
         }
     ],
     createdAt: {
         type: Date,
-        default: Date.now
+        default: Date()
     },
 });
 

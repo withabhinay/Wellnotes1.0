@@ -1,4 +1,5 @@
 import Routes from 'express';
+import jwt from 'jsonwebtoken';
 const User = Routes.Router();
 export default User;
 import { Users } from "../Models.js";
@@ -14,8 +15,65 @@ function Profile_ID() {
         randomID += Math.random().toString().slice(2);
     }
     return randomID.slice(0, length);
-}
+};
 
+function Create_JWT_Token(payload){
+    const opt = {
+        issuer: 'WellNotes',
+        expiresIn: '30d',
+    };
+    try{
+        const Token = jwt.sign({payload}, process.env.JWT_SECRET, opt);
+        return Token;
+    }catch{
+        return null;
+    };
+};
+function Verify_JWT_Token(Token){
+    const opt = {
+        issuer: 'WellNotes',
+        expiresIn: '30d',
+    };
+    try{
+        const decoded = jwt.verify(Token, process.env.JWT_SECRET, opt);
+        return decoded;
+    }catch{
+        return null;
+    };
+};
+function Create_Authentication_Token(){
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,!@#$%^&*()_+{}|:"<>?';
+    let Token = '';
+    for (let i = 0; i < 20; i++) {
+        Token += characters.charAt(Math.floor(Math.random() * characters.length));
+    };
+    return Token;
+};
+
+const ValidToken = async Token =>{
+    try{
+        if(Token){
+            let a = Verify_JWT_Token(Token);
+            // console.log(a);
+            a = a.payload;
+            if(a){
+                let GetUser = await Users.findOne({_id: a.ID});
+                if(GetUser){
+                    if(GetUser.Authentication.Token == a.Token){
+                        return GetUser;
+                    }else{
+                        return null;
+                    };
+                }
+            }else{
+                return null;
+            };
+        };
+        return null;
+    }catch{
+        return null;
+    }
+};
 // Server is running
 User.get("/", (req, res) => {
     res.status(200).json({
@@ -27,19 +85,25 @@ User.get("/", (req, res) => {
 // Authenticate user
 User.post("/auth", async (req, res) => {
     async function main() {
-        let {Email, Token} = req.body;
-        if (Email && Token) {
+        let {Email} = req.body;
+        if (Email) {
             Email = Email.toLowerCase();
             if(isValidEmail(Email)){
                 let data = await Users.findOne({Email: Email});
                 // If User exists
                 if (data) {
+                    const Token = Create_Authentication_Token();
+                    const Auth = Create_JWT_Token({
+                        Token: Token,
+                        ID: data._id,                    
+                    });
                     await Users.updateOne({Email: Email}, {$set: {
                         "Authentication.Token": Token,
                         "Authentication.Date": new Date()
                     }}).then(()=>{
                         return res.status(200).json({
                             Status: "Success",
+                            Token: Auth,
                             Message: "User authenticated",
                         });
                     }).catch(()=>{
@@ -70,8 +134,15 @@ User.post("/auth", async (req, res) => {
                         createdAt: new Date(),
                     });
                     await New_User.save().then(()=>{
-                        return res.status(201).json({
+                        
+                        const Token = Create_Authentication_Token();
+                        const Auth = Create_JWT_Token({
+                            Token: Token,
+                            ID: ID,
+                        });
+                        return res.status(200).json({
                             Status: "Success",
+                            Token: Auth,
                             Message: "User created",
                         });
                     }).catch(e=>{
@@ -90,7 +161,7 @@ User.post("/auth", async (req, res) => {
         }else{
             return res.status(400).json({
                 Status: "Error",
-                Message: "Email and Password are required",
+                Message: "Email Required",
             });
         };
     };
@@ -103,7 +174,7 @@ User.post("/auth", async (req, res) => {
 });
 // Create a new Journal
 User.post("/new_journal", async (req, res) => {
-    async function main() {
+    async function main(CheckedUser) {
         const {Title, Description} = req.body;
         if (Title && Description) {
             if (Title.length > 3 && Title.length < 100) {
@@ -116,34 +187,26 @@ User.post("/new_journal", async (req, res) => {
                         Description: Description,
                         Date: newDate,
                     };
-                    let Email = req.body.Email;
-                    let GetUser = await Users.findOne({Email: Email});
-                    if (GetUser) {
-                        await Users.updateOne({Email: GetUser.Email}, {
-                            $push: {
-                                Journals: Journal
-                            },
-                            $set: {
-                                Tokens_Earned: GetUser.Tokens_Earned+1
-                            }
-                        }).then(()=>{
-                            return res.status(201).json({
-                                Status: "Success",
-                                Message: "Journal added successfully",
-                                Journal: Journal,
-                            });
-                        }).catch(e=>{
-                            return res.status(500).json({
-                                Status: "Error",
-                                Message: "Internal server error",
-                            });
+                    await Users.updateOne({Email: CheckedUser.Email}, {
+                        $push: {
+                            Journals: Journal
+                        },
+                        $set: {
+                            Tokens_Earned: GetUser.Tokens_Earned+1
+                        }
+                    }).then(()=>{
+                        return res.status(201).json({
+                            Status: "Success",
+                            Message: "Journal added successfully",
+                            Journal: Journal,
                         });
-                    }else{
-                        return res.status(404).json({
+                    }).catch(e=>{
+                        return res.status(500).json({
                             Status: "Error",
-                            Message: "User not found",
+                            Message: "Internal server error",
                         });
-                    };
+                    });
+                
                 }else{
                     return res.status(200).json({
                         Status: "Error",
@@ -163,91 +226,86 @@ User.post("/new_journal", async (req, res) => {
             });
         };
     };
-    main().catch(()=>{
-        return res.status(500).json({
-            Status: "Error",
-            Message: "Internal server error",
+    const a = await ValidToken(req.body.Token);
+    if(a){
+        main(a).catch(()=>{
+            return res.status(500).json({
+                Status: "Error",
+                Message: "Internal server error",
+            });
         });
-    });
+    }else{
+        return res.status(403).json({
+            Status: "Error",
+            Message: "Unauthorized access, please login and try again later.",
+        });
+
+    }
 });
 
 // Get all Journal 
 User.get("/all_journals", async (req, res) => {
-    async function main(){
-        const Email = req.body.Email;
-        await Users.findOne({Email: Email}, (err, data) => {
-            if (err) {
-                return res.status(500).json({
-                    Status: "Error",
-                    Message: "Internal server error",
-                });
-            };
-            if(data){
+    async function main(CheckedUser){
                 
-                return res.status(200).json({
-                    Status: "Success",
-                    Journals: data.Journals,
-                });
-            }else{
-                return res.status(404).json({
-                    Status: "Error",
-                    Message: "User not found",
-                });
-            };
+        return res.status(200).json({
+            Status: "Success",
+            Journals: CheckedUser.Journals,
         });
     };
-    main().catch(e=>{
-        res.status(500).json({
-            Status: "Error",
-            Message: "Internal server error",
+    const a = await ValidToken(req.body.Token);
+    if(a){
+        main(a).catch(()=>{
+            return res.status(500).json({
+                Status: "Error",
+                Message: "Internal server error",
+            });
         });
-    });
+    }else{
+        return res.status(403).json({
+            Status: "Error",
+            Message: "Unauthorized access, please login and try again later.",
+        });
+
+    }
 });
 // Get a Journal by ID
 User.get("/journals/:id", async (req, res) => {
-    async function main(){
-        const Email = req.body.Email;
+    async function main(CheckedUser){
         const id = req.params.id;
-        await Users.findOne({Email: Email}, (err, data) => {
-            if (err) {
-                return res.status(500).json({
-                    Status: "Error",
-                    Message: "Internal server error",
+        let Journals = CheckedUser.Journals;
+        for (let i = 0; i < Journals.length; i++) {
+            const element = Journals[i];
+            if (element.ID == id) {
+                return res.status(200).json({
+                    Status: "Success",
+                    Journal: element,
                 });
             };
-            if (data) {
-                let Journals = data.Journals;
-                for (let i = 0; i < Journals.length; i++) {
-                    const element = Journals[i];
-                    if (element.ID == id) {
-                        return res.status(200).json({
-                            Status: "Success",
-                            Journal: element,
-                        });
-                    };
-                };
-                return res.status(404).json({
-                    Status: "Error",
-                    Message: "Journal not found",
-                });
-            }else{
-                return res.status(404).json({
-                    Status: "Error",
-                    Message: "User not found",
-                });
-            };
+        };
+        return res.status(404).json({
+            Status: "Error",
+            Message: "Journal not found",
         });
     };
-    main().catch(e=>{
-        res.status(500).json({
-            Status: "Error",
-            Message: "Internal server error",
+    const a = await ValidToken(req.body.Token);
+    if(a){
+        main(a).catch(()=>{
+            return res.status(500).json({
+                Status: "Error",
+                Message: "Internal server error",
+            });
         });
-    });
+    }else{
+        return res.status(403).json({
+            Status: "Error",
+            Message: "Unauthorized access, please login and try again later.",
+        });
+
+    }
 });
 // Search for a Journal
 User.get("/journals/search", async (req, res) => {
-    async function main(){
+    async function main(CheckedUser){
         function findMatchingObjects(sentence, objectsArray) {
             function isPercentageSame(s1, s2, percentage) {
                 const lengthToCompare = Math.floor(s2.length * (percentage / 100));
@@ -256,77 +314,108 @@ User.get("/journals/search", async (req, res) => {
             const matchedObjects = objectsArray.filter(obj => isPercentageSame(sentence, obj.Title, 40));
             return matchedObjects.length > 0 ? matchedObjects : null;
         };
-        const Email = req.body.Email;
         const Title = req.body.Title;
-        await Users.findOne({Email: Email}, (err, data) => {
-            if (err) {
-                return res.status(500).json({
-                    Status: "Error",
-                    Message: "Internal server error",
+        
+        let Journals = CheckedUser.Journals;
+        for (let i = 0; i < Journals.length; i++) {
+            const element = Journals[i];
+            if (Journals.Title.toLowerCase().trim() == Title.toLowerCase()) {
+                return res.status(200).json({
+                    Status: "Success",
+                    Matched: "100%",
+                    Journal: element,
                 });
             };
-            if(data){
-                let Journals = data.Journals;
-                for (let i = 0; i < Journals.length; i++) {
-                    const element = Journals[i];
-                    if (Journals.Title.toLowerCase().trim() == Title.toLowerCase()) {
-                        return res.status(200).json({
-                            Status: "Success",
-                            Matched: "100%",
-                            Journal: element,
-                        });
-                    };
-                };
-                const Found = findMatchingObjects(Title, Journals);
-                if (Found) {
-                    return res.status(200).json({
-                        Status: "Success",
-                        Matched: "40%",
-                        Journals: Found,
-                    });
-                };
-                return res.status(404).json({
-                    Status: "Error",
-                    Message: "Journal not found",
-                });
-            }else{
-                return res.status(404).json({
-                    Status: "Error",
-                    Message: "User not found",
-                });
-            };
-        });
-    };
-    main().catch(e=>{
-        res.status(500).json({
+        };
+        const Found = findMatchingObjects(Title, Journals);
+        if (Found) {
+            return res.status(200).json({
+                Status: "Success",
+                Matched: "40%",
+                Journals: Found,
+            });
+        };
+        return res.status(404).json({
             Status: "Error",
-            Message: "Internal server error",
+            Message: "Journal not found",
         });
-    });
+
+    };
+    const a = await ValidToken(req.body.Token);
+    if(a){
+        main(a).catch(()=>{
+            return res.status(500).json({
+                Status: "Error",
+                Message: "Internal server error",
+            });
+        });
+    }else{
+        return res.status(403).json({
+            Status: "Error",
+            Message: "Unauthorized access, please login and try again later.",
+        });
+
+    }
 });
 // Get profile
 User.get("/profile", async (req, res) => {
-    async function main(){
-        const Email = req.body.Email;
-        await Users.findOne({Email: Email}, (err, data) => {
-            if (err) {
-                return res.status(500).json({
-                    Status: "Error",
-                    Message: "Internal server error",
-                });
-            };
+    async function main(CheckedUser){
+        return res.status(200).json({
+            Status: "Success",
+            Journals: CheckedUser,
+        });
+    };
+    const a = await ValidToken(req.body.Token);
+    if(a){
+        main(a).catch(()=>{
+            return res.status(500).json({
+                Status: "Error",
+                Message: "Internal server error",
+            });
+        });
+    }else{
+        return res.status(403).json({
+            Status: "Error",
+            Message: "Unauthorized access, please login and try again later.",
+        });
+
+    }
+});
+
+User.get("/logout", async (req, res) => {
+    async function main(CheckedUser){
+
+        await Users.updateOne({Email: CheckedUser.Email}, {
+            $set: {
+                "Authentication.Token": "",
+                "Authentication.Date": new Date()
+            }
+        }).then(()=>{
             return res.status(200).json({
                 Status: "Success",
-                Journals: data,
+                Message: "User logged out",
+            });
+        }).catch(()=>{
+            return res.status(500).json({
+                Status: "Error",
+                Message: "Internal server error",
             });
         });
     };
-    main().catch(e=>{
-        res.status(500).json({
-            Status: "Error",
-            Message: "Internal server error",
+    const a = await ValidToken(req.body.Token);
+    if(a){
+        main(a).catch(()=>{
+            return res.status(500).json({
+                Status: "Error",
+                Message: "Internal server error",
+            });
         });
-    });
+    }else{
+        return res.status(403).json({
+            Status: "Error",
+            Message: "Unauthorized access, please login and try again later.",
+        });
+    };
 });
 
 // If route is not found
