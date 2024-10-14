@@ -27,8 +27,8 @@ User.get("/", (req, res) => {
 // Authenticate user
 User.post("/auth", async (req, res) => {
     async function main() {
-        let {Name, Email, Token} = req.body;
-        if (Name && Email && Token) {
+        let {Email, Token} = req.body;
+        if (Email && Token) {
             Email = Email.toLowerCase();
             if(isValidEmail(Email)){
                 let data = await Users.findOne({Email: Email});
@@ -60,7 +60,6 @@ User.post("/auth", async (req, res) => {
                     };
                     const New_User = new Users({
                         _id: ID,
-                        Name: Name,
                         Email: Email,
                         Authentication:{
                             Token: Token,
