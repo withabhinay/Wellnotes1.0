@@ -12,7 +12,7 @@ export default function Profilebar() {
     const dbtoken = localStorage.getItem("dbtoken");
     console.log("Fetching profile", dbtoken);
     try {
-      const response = await axios.post("https://wellnotes1-0.vercel.app/api/profile", {
+      const response = await axios.post("wellnotes.getskybuy.shop/api/profile", {
         Token: dbtoken
       });
       console.log("Profile response", response.data);

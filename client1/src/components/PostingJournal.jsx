@@ -14,7 +14,7 @@ export default function NewJournal({ setAuthToken, authToken, handleLogout }) {
     const Token = localStorage.getItem("dbtoken");
     console.log("inside posting",Token);
     try {
-      const response = await axios.post('https://wellnotes1-0.vercel.app/api/new_journal', { 
+      const response = await axios.post('wellnotes.getskybuy.shop/api/new_journal', { 
         Title, Description, Token}
         )
       alert("Journal Published: Your journal entry has been successfully published.")

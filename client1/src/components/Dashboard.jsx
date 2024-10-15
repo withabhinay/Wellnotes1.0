@@ -40,7 +40,7 @@ export default function Dashboard({ setAuthToken, authToken, handleLogout }) {
 
   const fetchJournals = async () => {
     console.log("inside fetch journal",dbtoken);
-    const response = await axios.post("https://wellnotes1-0.vercel.app/api/all_journals",
+    const response = await axios.post("wellnotes.getskybuy.shop/api/all_journals",
        {
         Token: dbtoken
       }
@@ -54,7 +54,7 @@ export default function Dashboard({ setAuthToken, authToken, handleLogout }) {
       console.log("User details fetched from Okto:", details);
       setUserDetails(details);
 
-      const authResponse =  await axios.post('https://wellnotes1-0.vercel.app/api/auth', {
+      const authResponse =  await axios.post('wellnotes.getskybuy.shop/api/auth', {
         Email: details.email,
         });
         setDbtoken(authResponse.data.Token)
