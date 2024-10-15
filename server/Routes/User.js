@@ -2,7 +2,7 @@ const Routes = require('express');
 const jwt = require('jsonwebtoken');
 const User = Routes.Router();
 module.exports = User;
-const Users  = require("../Models.js");
+const {Users}  = require("../Models.js");
 
 function isValidEmail(mail) {
     const a = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -110,7 +110,7 @@ User.post("/auth", async (req, res) => {
                     }).catch(()=>{
                         return res.status(500).json({
                             Status: "Error",
-                            Message: "Internal server error",
+                            Message: "Internal server errors",
                         });
                     });
                 }else{ 
@@ -178,10 +178,10 @@ User.post("/auth", async (req, res) => {
 User.post("/new_journal", async (req, res) => {
     async function main(CheckedUser) {
         const {Title, Description, Token} = req.body;
-        console.log(req.body);
-        console.log(Title);
-        console.log(Description);
-        console.log(Token);
+        // console.log(req.body);
+        // console.log(Title);
+        // console.log(Description);
+        // console.log(Token);
         if (Title && Description) {
             if (Title.length > 3 && Title.length < 100) {
                 if (Description.length > 3 && Description.length < 1000) {
