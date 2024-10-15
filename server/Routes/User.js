@@ -420,7 +420,56 @@ User.post("/logout", async (req, res) => {
         });
     };
 });
-
+// Delete a Journal
+User.post("/journal/delete/:id", async (req, res) => {
+    async function main(CheckedUser){
+        const id = req.params.id;
+        let Journals = CheckedUser.Journals;
+        let New_Journals = [];
+        let found = false;
+        for (let i = 0; i < Journals.length; i++) {
+            const element = Journals[i];
+            if (element.ID != id) {
+                found = true;
+                New_Journals.push(element);
+            };
+        };
+        if(found){
+            await Users.updateOne({Email: CheckedUser.Email}, {
+                Journals: New_Journals,
+            }).then(()=>{
+                return res.status(200).json({
+                    Status: "Success",
+                    Message: "Journal deleted successfully",
+                });
+            }).catch(()=>{
+                return res.status(500).json({
+                    Status: "Error",
+                    Message: "Internal server error",
+                });
+            });
+        }else{
+            return res.status(404).json({
+                Status: "Error",
+                Message: "Journal ID not Found.",
+            });
+        };
+    };
+    const a = await ValidToken(req.body.Token);
+    if(a){
+        main(a).catch(()=>{
+            return res.status(500).json({
+                Status: "Error",
+                Message: "Internal server error",
+            });
+        });
+    }else{
+        return res.status(403).json({
+            Status: "Error",
+            Message: "Unauthorized access, please login and try again later.",
+        });
+    };
+});
 // If route is not found
 User.get("*", (req, res) => {
     res.status(404).json({
