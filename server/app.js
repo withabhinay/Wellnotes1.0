@@ -1,13 +1,13 @@
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import bodyParser from "body-parser";
-import Users from "./Routes/User.js";
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const Users = require("./Routes/User.js");
 
 const app = express();
 dotenv.config();
 const Port = process.env.Port;
-
+// 'http://localhost:3000', 'http://localhost:5173',
 const corsOptions = {
     origin: ['https://wellnotes1-00.vercel.app/'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
