@@ -9,7 +9,7 @@ dotenv.config();
 const Port = process.env.Port;
 
 const corsOptions = {
-    origin: ['http://localhost:5173'],
+    origin: ['https://wellnotes1-00.vercel.app/'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type'],
     credentials: true,
