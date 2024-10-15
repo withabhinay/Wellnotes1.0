@@ -12,7 +12,7 @@ export default function Profilebar() {
     const dbtoken = localStorage.getItem("dbtoken");
     console.log("Fetching profile", dbtoken);
     try {
-      const response = await axios.post("wellnotes.getskybuy.shop/api/profile", {
+      const response = await axios.post("https://ricksarkar.getskybuy.shop/api/profile", {
         Token: dbtoken
       });
       console.log("Profile response", response.data);

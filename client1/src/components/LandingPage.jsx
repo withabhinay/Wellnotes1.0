@@ -61,7 +61,7 @@ export default function LandingPage() {
           <h2 className="text-3xl font-bold text-center mb-10">How it Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             <div>
-              <img src="../../public/firstFeature.svg" alt="Journal Interface" width={400} height={300} />
+              <img src="../../public/1st-feature.png"  alt="Journal Interface" width={400} height={300} />
             </div>
             <div>
               <h3 className="text-2xl font-bold mb-4">Journal Your Thoughts -&gt; Better Clarity -&gt; More Productive</h3>
