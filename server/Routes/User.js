@@ -1,9 +1,8 @@
-import Routes from 'express';
-import jwt from 'jsonwebtoken';
+const Routes = require('express');
+const jwt = require('jsonwebtoken');
 const User = Routes.Router();
-export default User;
-import { Users } from "../Models.js";
-import e from 'express';
+module.exports = User;
+const Users  = require("../Models.js");
 
 function isValidEmail(mail) {
     const a = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;

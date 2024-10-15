@@ -1,9 +1,9 @@
-import dotenv from 'dotenv';
+const dotenv = require('dotenv');
+const mongoose = require('mongoose');
 dotenv.config();
-import mongoose from 'mongoose';
 const URL = `mongodb+srv://${process.env.Mongodb_Username}:${process.env.Mongodb_Password}@${process.env.Mongodb_Domain}/${process.env.Mongodb_DataBase}`;
+
 mongoose.connect(URL);
-console.log(URL);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
@@ -71,4 +71,6 @@ const userSchema = new Schema({
 
 const Users = Model('Users', userSchema);
 
-export {Users};
+module.exports = {
+    Users:Users
+};
