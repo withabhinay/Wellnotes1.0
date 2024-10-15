@@ -5,6 +5,8 @@ import { Search, PlusCircle } from 'lucide-react';
 import { useOkto } from "okto-sdk-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useNavigate } from 'react-router-dom';
+import Head from './Head';
+import Profilebar from './Profilebar';
 
 export default function Dashboard({ setAuthToken, authToken, handleLogout }) {
   const [dbtoken, setDbtoken] = useState(null)
@@ -13,7 +15,7 @@ export default function Dashboard({ setAuthToken, authToken, handleLogout }) {
   const [error, setError] = useState(null);
   const { getUserDetails, logOut } = useOkto();
   const [userData, setUserData] = useState({
-    name: '',
+   
     avatar: '../../public/profile.svg',
     userId: 'a51821',
     totalJournals: 35,
@@ -82,51 +84,11 @@ export default function Dashboard({ setAuthToken, authToken, handleLogout }) {
 
   return (
     <div className="min-h-screen bg-black text-white p-8">
-      <header className="flex justify-between items-center mb-8">
-        <img src="/logo.svg" alt="Wellnotes Logo" width={150} height={50} />
-        <div className="flex items-center gap-4">
-          <span>Hey there 👋</span>
-          <span className="font-bold">
-            {userDetails ? userDetails.email: 'Loading...'}
-          </span>
-          <img 
-            src={userDetails && userDetails.avatar ? userDetails.avatar : '../../public/profile.svg'} 
-            alt="User avatar" 
-            className="w-10 h-10 rounded-full" 
-          />
-        </div>
-      </header>
+      <Head/>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-gray-800 p-4 rounded-lg">
-          <h2 className="text-lg font-bold mb-2">User ID</h2>
-          <p className="text-1xl font-semibold">{userDetails ? userDetails.user_id: 'Loading...'}</p>
-        </div>
-        <div className="bg-gray-800 p-4 rounded-lg">
-          <h2 className="text-lg font-semibold mb-2">Total Journals</h2>
-          <p className="text-2xl font-bold">{userData.totalJournals}</p>
-        </div>
-        <div className="bg-gray-800 p-4 rounded-lg">
-          <h2 className="text-lg font-semibold mb-2">Groups Won</h2>
-          <p className="text-2xl font-bold">{userData.groupsWon}</p>
-        </div>
-        <div className="bg-gray-800 p-4 rounded-lg">
-          <h2 className="text-lg font-semibold mb-2">Leaderboard Rank</h2>
-          <p className="text-2xl font-bold">#{userData.leaderboardRank}</p>
-        </div>
-      </div>
+     <Profilebar/>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <div className="bg-gray-800 p-4 rounded-lg">
-          <h2 className="text-lg font-semibold mb-2">Tokens Earned</h2>
-          <p className="text-2xl font-bold">{userData.tokensEarned} $NOTE</p>
-          <p className="text-sm text-gray-400">${(userData.tokensEarned * 0.054).toFixed(2)}</p>
-        </div>
-        <div className="bg-gray-800 p-4 rounded-lg">
-          <h2 className="text-lg font-semibold mb-2">Current Streak</h2>
-          <p className="text-2xl font-bold">{userData.currentStreak} Days</p>
-        </div>
-      </div>
+     
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-gray-800 p-4 rounded-lg">
@@ -206,4 +168,6 @@ export default function Dashboard({ setAuthToken, authToken, handleLogout }) {
       </Dialog>
     </div>
   );
+
+
 }
