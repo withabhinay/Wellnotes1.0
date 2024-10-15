@@ -41,7 +41,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-black text-white">
       <header className="container mx-auto flex items-center justify-between py-2">
-        <img src="../../public/logo.svg" alt="Wellnotes Logo" width={150} height={50} />
+        <img src="./../../public/logo.svg" alt="Wellnotes Logo" width={150} height={50} />
         <nav className="space-x-4">
           <a href="#features">Features</a>
           <a href="#contact">Contact Us</a>
