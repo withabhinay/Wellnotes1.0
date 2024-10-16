@@ -35,7 +35,7 @@ function Verify_JWT_Token(Token){
         expiresIn: '30d',
     };
     try{
-        const decoded = jwt.verify(Token, process.env.JWT_SECRET, opt);
+        const decoded = jwt.verify(Token, process.env.JWT_Secret, opt);
         return decoded;
     }catch{
         return null;
