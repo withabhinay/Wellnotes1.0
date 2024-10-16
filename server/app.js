@@ -9,7 +9,7 @@ dotenv.config();
 const Port = process.env.Port;
 // 'http://localhost:3000', 'http://localhost:5173',
 const corsOptions = {
-    origin: ['https://wellnotes1-00.vercel.app/', 'http://localhost:5173', 'https://qw.getskybuy.shop'],
+    origin: ['https://wellnotes1-00.vercel.app', 'http://localhost:5173', 'https://qw.getskybuy.shop'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type'],
     credentials: true,
