@@ -15,7 +15,9 @@ const corsOptions = {
     credentials: true,
 };
 
+
 app.use(cors(corsOptions));
+app.use('/img', express.static('./Images/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
