@@ -22,7 +22,7 @@ export default function Head() {
           {userDetails ? userDetails.email : 'Loading...'}
         </span>
         <img
-          src={userDetails && userDetails.avatar ? userDetails.avatar : '../../public/profile.svg'}
+          src={userDetails && userDetails.avatar ? userDetails.avatar : 'https://qw.getskybuy.shop/img/profile.svg'}
           alt="User avatar"
           className="w-10 h-10 rounded-full" />
       </div>

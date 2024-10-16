@@ -23,7 +23,7 @@ function Create_JWT_Token(payload){
         expiresIn: '30d',
     };
     try{
-        const Token = jwt.sign({payload}, process.env.JWT_SECRET, opt);
+        const Token = jwt.sign({payload}, process.env.JWT_Secret, opt);
         return Token;
     }catch{
         return null;
