@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = Routes.Router();
 module.exports = User;
 const {Users}  = require("../Models.js");
-
+require("dotenv").config();
 function isValidEmail(mail) {
     const a = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return a.test(mail);
