@@ -397,7 +397,7 @@ User.post("/profile", async (req, res) => {
     async function main(CheckedUser){
         return res.status(200).json({
             Status: "Success",
-            Journals: CheckedUser,
+            User: CheckedUser,
         });
     };
     const a = await ValidToken(req.body.Token);
