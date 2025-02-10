@@ -16,7 +16,7 @@ export default function Dashboard({ setAuthToken, authToken, handleLogout }) {
   const { getUserDetails, logOut } = useOkto();
   const [userData, setUserData] = useState({
    
-    avatar: 'https://qw.getskybuy.shop/img/profile.svg',
+    avatar: 'https://pssvd9k9-3000.inc1.devtunnels.ms/img/profile.svg',
     userId: 'a51821',
     totalJournals: 35,
     groupsWon: 12,
@@ -40,7 +40,7 @@ export default function Dashboard({ setAuthToken, authToken, handleLogout }) {
 
   const fetchJournals = async () => {
     console.log("inside fetch journal",dbtoken);
-    const response = await axios.post("https://qw.getskybuy.shop/api/all_journals",
+    const response = await axios.post("https://pssvd9k9-3000.inc1.devtunnels.ms/api/all_journals",
        {
         Token: dbtoken
       }
@@ -54,7 +54,7 @@ export default function Dashboard({ setAuthToken, authToken, handleLogout }) {
       console.log("User details fetched from Okto:", details);
       setUserDetails(details);
 
-      const authResponse =  await axios.post('https://qw.getskybuy.shop/api/auth', {
+      const authResponse =  await axios.post('https://pssvd9k9-3000.inc1.devtunnels.ms/api/auth', {
         Email: details.email,
         });
         setDbtoken(authResponse.data.Token)

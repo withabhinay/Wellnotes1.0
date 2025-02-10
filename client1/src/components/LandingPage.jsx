@@ -41,7 +41,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-black text-white">
       <header className="container mx-auto flex items-center justify-between py-2">
-        <img src="https://qw.getskybuy.shop/img/logo.svg" alt="Wellnotes Logo" width={150} height={50} />
+        <img src="https://pssvd9k9-3000.inc1.devtunnels.ms/img/logo.svg" alt="Wellnotes Logo" width={150} height={50} />
         <nav className="space-x-4">
           <a href="#features">Features</a>
           <a href="#contact">Contact Us</a>
@@ -54,14 +54,14 @@ export default function LandingPage() {
         <section className="container mx-auto text-center py-20">
           <h1 className="text-4xl font-bold mb-4">Get Paid to Build Your Productive Wellbeing with Wellnotes</h1>
           <p className="mb-8">Write, journal, and compete with friends while building social accountability + earning rewards</p>
-          <img src="https://qw.getskybuy.shop/img/dashboard.svg" alt="Wellnotes App Interface" width={800} height={600} className="mx-auto" />
+          <img src="https://pssvd9k9-3000.inc1.devtunnels.ms/img/dashboard.svg" alt="Wellnotes App Interface" width={800} height={600} className="mx-auto" />
         </section>
 
         <section className="container mx-auto py-20">
           <h2 className="text-3xl font-bold text-center mb-10">How it Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             <div>
-              <img src="https://qw.getskybuy.shop/img/1st-feature.png"  alt="Journal Interface" width={400} height={300} />
+              <img src="https://pssvd9k9-3000.inc1.devtunnels.ms/img/1st-feature.png"  alt="Journal Interface" width={400} height={300} />
             </div>
             <div>
               <h3 className="text-2xl font-bold mb-4">Journal Your Thoughts -&gt; Better Clarity -&gt; More Productive</h3>
@@ -77,7 +77,7 @@ export default function LandingPage() {
               <p>Get rewarded with points, and simply Cash out into Real $$</p>
             </div>
             <div className='mx-auto '>
-              <img src="https://qw.getskybuy.shop/img/secondFeature.svg" alt="Journal Interface" width={400} height={300} />
+              <img src="https://pssvd9k9-3000.inc1.devtunnels.ms/img/secondFeature.svg" alt="Journal Interface" width={400} height={300} />
             </div>           
           </div>
         </section>
@@ -85,7 +85,7 @@ export default function LandingPage() {
         <section className="container mx-auto py-20">
           <h2 className="text-3xl font-bold text-center mb-10">Join or Create Groups to be more accountable towards your productivity</h2>
           <p className="text-center mb-8">Pool in some tokens for joining, and if you build more consistency in journaling than others, get the respective pre-defined prize pool.</p>
-          <img src="https://qw.getskybuy.shop/img/thirdFeature.svg" alt="Groups Interface" width={800} height={400} className="mx-auto" />
+          <img src="https://pssvd9k9-3000.inc1.devtunnels.ms/img/thirdFeature.svg" alt="Groups Interface" width={800} height={400} className="mx-auto" />
         </section>
 
         <section id="faq" className="container mx-auto py-20">
@@ -122,7 +122,7 @@ export default function LandingPage() {
       <footer className="container mx-auto py-10 border-t border-gray-800">
         <div className="flex justify-between">
           <div>
-            <img src="https://qw.getskybuy.shop/img/logo.svg" alt="Wellnotes Logo" width={120} height={40} />
+            <img src="https://pssvd9k9-3000.inc1.devtunnels.ms/img/logo.svg" alt="Wellnotes Logo" width={120} height={40} />
             <p className="mt-2">It's time to incentivise your thoughts and build productive wellbeing.</p>
             <p>&copy; 2024 - All rights reserved</p>
           </div>
