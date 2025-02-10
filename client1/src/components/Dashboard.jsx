@@ -28,47 +28,47 @@ export default function Dashboard({ setAuthToken, authToken, handleLogout }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [showPopup, setShowPopup] = useState(false);
 
-  useEffect(()=> {
-    localStorage.setItem("dbtoken", dbtoken);
-    fetchJournals();
-  },[dbtoken]);
+  
+   
+ 
   
   useEffect( () => {
-    fetchUserDetails();
-    
+    // fetchUserDetails();
+    fetchJournals();
   }, []);
 
   const fetchJournals = async () => {
-    console.log("inside fetch journal",dbtoken);
+    const token = localStorage.getItem("dbtoken");
+    console.log("inside fetch journal",token);
     const response = await axios.post("https://zipbuy.in/api/all_journals",
        {
-        Token: dbtoken
+        Token: token
       }
     )
     console.log("reposnee for journals",response)
     setJournals(response.data.Journals)
   }
-  const fetchUserDetails = async () => {
-    try {
-      const details = await getUserDetails();
-      console.log("User details fetched from Okto:", details);
-      setUserDetails(details);
+  // const fetchUserDetails = async () => {
+  //   try {
+  //     const details = await getUserDetails();
+  //     console.log("User details fetched from Okto:", details);
+  //     setUserDetails(details);
 
-      const authResponse =  await axios.post('https://zipbuy.in/api/auth', {
-        Email: details.email,
-        });
-        setDbtoken(authResponse.data.Token)
+  //     const authResponse =  await axios.post('https://zipbuy.in/api/auth', {
+  //       Email: details.email,
+  //       });
+  //       setDbtoken(authResponse.data.Token)
         
-        console.log("here res",authResponse)
-      if (authResponse.status === 200) {
-        console.log('User authenticated successfully:', authResponse.data.Token);
-      } else {
-        console.error('Authentication failed');
-      }
-    } catch (error) {
-      setError(`Failed to fetch user details or authenticate: ${error.message}`);
-    }
-  };
+  //       console.log("here res",authResponse)
+  //     if (authResponse.status === 200) {
+  //       console.log('User authenticated successfully:', authResponse.data.Token);
+  //     } else {
+  //       console.error('Authentication failed');
+  //     }
+  //   } catch (error) {
+  //     setError(`Failed to fetch user details or authenticate: ${error.message}`);
+  //   }
+  // };
 
   const filteredJournals = journals.filter(journal =>
     journal.Title.toLowerCase().includes(searchTerm.toLowerCase())

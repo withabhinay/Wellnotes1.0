@@ -16,25 +16,24 @@ export default function Profilebar() {
         Token: dbtoken
       });
       console.log("Profile response", response.data);
-      setprofiledata(response.data);  // Set response data to state
+      setprofiledata(response.data.User);  // Set response data to state
     } catch (error) {
       console.error("Error fetching profile", error);
     }
   };
 
-  // Render a loading message while profiledata is null
 
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
       <div className="bg-gray-800 p-4 rounded-lg">
         <h2 className="text-lg font-bold mb-2">User ID</h2>
-        <p className="text-1xl font-semibold">{profiledata ? profiledata.Journals._id : 'Loading...'}</p>
+        <p className="text-1xl font-semibold">{profiledata ? profiledata._id : 'Loading...'}</p>
       </div>
       <div className="bg-gray-800 p-4 rounded-lg">
         <h2 className="text-lg font-semibold mb-2">Total Journals</h2>
         {/* Fixed length access */}
-        <p className="text-2xl font-bold">{profiledata ? profiledata.Journals.Journals.length: 'Loading...'}</p>
+        <p className="text-2xl font-bold">{profiledata ? profiledata.Journals.length: 'Loading...'}</p>
       </div>
       <div className="bg-gray-800 p-4 rounded-lg">
         <h2 className="text-lg font-semibold mb-2">Groups Won</h2>
@@ -47,7 +46,7 @@ export default function Profilebar() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <div className="bg-gray-800 p-4 rounded-lg">
           <h2 className="text-lg font-semibold mb-2">Tokens Earned</h2>
-          <p className="text-2xl font-bold">{profiledata ? profiledata.Journals.Journals.length: 'Loading...'} </p>
+          <p className="text-2xl font-bold">{profiledata ? profiledata.Journals.length: 'Loading...'} </p>
         </div>
         <div className="bg-gray-800 p-4 rounded-lg">
           <h2 className="text-lg font-semibold mb-2">Current Streak</h2>
