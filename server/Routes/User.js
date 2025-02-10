@@ -4,6 +4,8 @@ const User = Routes.Router();
 module.exports = User;
 const {Users}  = require("../Models.js");
 require("dotenv").config();
+
+const admin = require("./google.js")
 function isValidEmail(mail) {
     const a = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return a.test(mail);
@@ -84,8 +86,7 @@ User.get("/", (req, res) => {
 
 // Authenticate user
 User.post("/auth", async (req, res) => {
-    async function main() {
-        let {Email} = req.body;
+    async function main(Email) {
  
         if (Email) {
             Email = Email.toLowerCase();
@@ -166,13 +167,43 @@ User.post("/auth", async (req, res) => {
             });
         };
     };
-    main().catch((a)=> {
-        console.log(a);
-        return res.status(500).json({
-            Status: "Error",
-            Message: "Internal server error",
-        });
-    });
+    
+    (async () => {
+        try {
+            const token = req.body.token;
+            
+            if (!token) {
+                return res.status(400).json({
+                    Status: "Error",
+                    Message: "Token is required",
+                });
+            };
+            
+            let decodedToken;
+            try {
+                decodedToken = await admin.auth().verifyIdToken(token);
+                
+                if (!decodedToken) {
+                    return res.status(401).send({ message: 'Authentication failed' });
+                };
+                await main(decodedToken.email).catch(error => {
+                    return res.status(500).json({
+                        Status: "Error",
+                        Message: "Internal server error",
+                    });
+                });
+
+            } catch (error) {
+                return res.status(401).send({ message: 'Authentication failed' });
+            };
+
+        } catch (error) {
+            return res.status(500).json({
+                Status: "Error",
+                Message: "Internal server error",
+            });
+        }
+    })();
 });
 // Create a new Journal
 User.post("/new_journal", async (req, res) => {
