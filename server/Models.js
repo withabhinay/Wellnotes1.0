@@ -29,6 +29,14 @@ const userSchema = new Schema({
         required: true,
         lowercase: true,
     },
+    Name:{
+        type: String,
+        default: "",
+    },
+    Profile:{
+        type: String,
+        default: "",
+    },
     Authentication:{
         Token:{
             type: String,
