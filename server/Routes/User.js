@@ -86,7 +86,7 @@ User.get("/", (req, res) => {
 
 // Authenticate user
 User.post("/auth", async (req, res) => {
-    async function main(Email) {
+    async function main(Email, Name, Profile) {
  
         if (Email) {
             Email = Email.toLowerCase();
@@ -136,6 +136,8 @@ User.post("/auth", async (req, res) => {
                             Token: Token,
                             Date: new Date(),
                         },
+                        Name,
+                        Profile,
                         Journals: [],
                         Tokens_Earned: 0,
                         createdAt: new Date(),
@@ -186,7 +188,7 @@ User.post("/auth", async (req, res) => {
                 if (!decodedToken) {
                     return res.status(401).send({ message: 'Authentication failed' });
                 };
-                await main(decodedToken.email).catch(error => {
+                await main(decodedToken.email, decodedToken.name, decodedToken.picture).catch(error => {
                     return res.status(500).json({
                         Status: "Error",
                         Message: "Internal server error",
