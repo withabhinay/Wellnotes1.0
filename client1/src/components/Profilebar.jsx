@@ -12,7 +12,7 @@ export default function Profilebar() {
     const dbtoken = localStorage.getItem("dbtoken");
     console.log("Fetching profile", dbtoken);
     try {
-      const response = await axios.post("https://pssvd9k9-3000.inc1.devtunnels.ms/api/profile", {
+      const response = await axios.post("https://zipbuy.in/api/profile", {
         Token: dbtoken
       });
       console.log("Profile response", response.data);

@@ -14,7 +14,7 @@ export default function NewJournal({ setAuthToken, authToken, handleLogout }) {
     const Token = localStorage.getItem("dbtoken");
     console.log("inside posting",Token);
     try {
-      const response = await axios.post('https://pssvd9k9-3000.inc1.devtunnels.ms/api/new_journal', { 
+      const response = await axios.post('https://zipbuy.in/api/new_journal', { 
         Title, Description, Token}
         )
       alert("Journal Published: Your journal entry has been successfully published.")
