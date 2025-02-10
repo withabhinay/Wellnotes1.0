@@ -29,11 +29,11 @@ const userSchema = new Schema({
         required: true,
         lowercase: true,
     },
-    name:{
+    Name:{
         type: String,
         default: "",
     },
-    profile:{
+    Profile:{
         type: String,
         default: "",
     },
